@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KERN Balance ESP32</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="scale-container">
+        <header>
+            <h1>KERN Balance Terminal</h1>
+            <div id="connection-status" class="status-indicator">
+                <span class="dot"></span>
+                <span class="status-text">Disconnected</span>
+            </div>
+        </header>
+
+        <section class="display-panel-wrapper">
+            <div class="glass-reflection"></div>
+            <div class="display-panel">
+                <div class="display-background" aria-hidden="true">8888.888</div>
+                <div class="display-value" id="weight-display">0000.000</div>
+                <div class="display-unit">kg</div>
+            </div>
+        </section>
+
+        <section class="controls">
+            <button id="tare-btn" class="tare-btn">
+                <span class="btn-edge"></span>
+                <span class="btn-front">
+                    > TARE 0.0 <
+                </span>
+            </button>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>

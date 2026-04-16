@@ -1,0 +1,14 @@
+{
+  "name": "kern-balance-esp32",
+  "version": "1.0.0",
+  "description": "ESP32 WebSocket Balance Dashboard",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.0",
+    "ws": "^8.16.0"
+  }
+}
