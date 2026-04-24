@@ -16,13 +16,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         ws.onopen = () => {
             console.log('Connected to server');
-            statusIndicator.classList.add('connected');
-            statusText.textContent = 'Connected';
+            statusText.textContent = 'Waiting for Balance...';
             if (reconnectInterval) {
                 clearInterval(reconnectInterval);
                 reconnectInterval = null;
             }
         };
+
+        let balanceTimeout = null;
 
         ws.onmessage = (event) => {
             try {
@@ -31,6 +32,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (data.weight !== undefined) {
                     // Update display
                     updateWeight(data.weight);
+
+                    // Update connection status
+                    statusIndicator.classList.add('connected');
+                    statusText.textContent = 'Connected';
+
+                    // Reset activity timer
+                    clearTimeout(balanceTimeout);
+                    balanceTimeout = setTimeout(() => {
+                        statusIndicator.classList.remove('connected');
+                        statusText.textContent = 'Balance Offline';
+                    }, 3000);
                 }
             } catch (err) {
                 console.error('Failed to parse WS message:', err);
@@ -40,13 +52,15 @@ document.addEventListener('DOMContentLoaded', () => {
         ws.onclose = () => {
             console.log('Disconnected from server');
             statusIndicator.classList.remove('connected');
-            statusText.textContent = 'Disconnected';
+            statusText.textContent = 'Server Offline';
+            clearTimeout(balanceTimeout);
             
             // Try to reconnect
             if (!reconnectInterval) {
                 reconnectInterval = setInterval(connect, 3000);
             }
         };
+
 
         ws.onerror = (err) => {
             console.error('WebSocket Error:', err);

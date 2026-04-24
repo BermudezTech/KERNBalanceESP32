@@ -21,14 +21,23 @@ wss.on('connection', (ws, req) => {
     console.log(`[WS] New client connected from ${clientIp}`);
 
     ws.on('message', (message) => {
-        console.log(`[WS] Received: ${message}`);
+        const msgStr = message.toString();
+        
+        try {
+            const data = JSON.parse(msgStr);
+            if (data.weight !== undefined) {
+                console.log(`[WS] Balance Update: ${data.weight} kg`);
+            } else if (data.command === 'tare') {
+                console.log(`[WS] Tare Command from UI`);
+            }
+        } catch (e) {
+            console.log(`[WS] Received Raw: ${msgStr}`);
+        }
         
         // Broadcast the message to all other connected clients
         wss.clients.forEach((client) => {
-            // We can send to everyone, including sender (useful if UI wants to confirm tare, but usually we just send it to all others)
-            // If we want to send to everyone (broker approach):
             if (client.readyState === WebSocket.OPEN) {
-                client.send(message.toString());
+                client.send(msgStr);
             }
         });
     });
